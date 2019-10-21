@@ -1,0 +1,42 @@
+public void linkAccount(String userId) {
+        try {
+            int i=1;
+            boolean check=true;
+            for(AccountBean a:service.getAccountList(userId)) {
+                System.out.println(i+"\t\t"+a.getAccountNumber()+"\t\t"+a.getCurrentBalance());
+                    i++;       
+            }
+            System.out.println("Choose the account number you want to link");
+
+            String temp=sc.next();
+            while (check) {
+            if(temp.matches("[0-9]{1,2}")){
+             int a=Integer.parseInt(temp)
+              if(a<=service.getAccountList(userId).size()){
+               check= false;
+              }else{
+               System.out.println("Please Re-enter the choice");
+               temp=sc.next();
+
+              
+                }
+
+             
+                        
+            }else{
+            
+             System.out.println("Please Re-enter the choice");
+              temp=sc.next();
+
+            }}
+            
+            BigInteger accountNumber=service.getAccountList(userId).get(a-1).getAccountNumber();
+            System.out.println(accountNumber.toString());
+            service.linkMyAccount(accountNumber, userId);
+        } catch (IBSException e) {
+            System.out.println(e.getMessage());
+           
+        }
+       
+       
+    }
