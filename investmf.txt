@@ -1,0 +1,327 @@
+public void investMFPlan(String userId,String a) {			
+
+			try {
+				if(a=="SIP") {
+					viewMFPlans(a);
+					
+				MutualFund mutualFund= new MutualFund();
+				BankMutualFund bankMutualFund= new BankMutualFund();
+				int mfId = 0;
+				boolean check = true;
+				boolean check1 = true;
+				double mfAmount = 0;
+				System.out.println("Enter the mutual fund Id:");
+				String temp = sc.next();
+				while (check) {
+
+					if (temp.matches("[1-9][0-9]{2,10}")) {
+
+						mfId = Integer.parseInt(temp);
+						if (service.viewMFPlans().containsKey(mfId)) {
+
+							check = false;
+						} else {
+							System.out.println("Please enter valid MfId");
+							temp = sc.next();
+
+						}
+
+					}
+
+					else {
+						System.out.println("Please Re-enter the value");
+						temp = sc.next();
+
+					}
+
+				}
+				bankMutualFund=service.viewMFPlans().get(mfId);
+				mutualFund.setBankMutualFund(bankMutualFund);
+				
+				
+				System.out.println("Enter the frequency");
+				System.out.println("1.MONTHLY");
+				System.out.println("2.QUARTERLY");
+				System.out.println("3.HALFYEARLY");
+				System.out.println("4.ANNUALLY");
+				System.out.println("5.DAILY");
+				System.out.println("Enter the choice number of the frequency");
+				check1=true;
+				
+				 String tempUpdate = sc.next();
+					int stat = 0;
+					while (check1) {
+						if (tempUpdate.matches("[1-5]")) {
+							stat= Integer.parseInt(tempUpdate);
+							
+								check1 = false;
+							
+						} else {
+							System.out.println("Please Re-enter the value");
+							tempUpdate = sc.next();
+						}
+
+					}
+					
+				if(stat==1) {
+					mutualFund.setFrequency(Frequency.MONTHLY);					
+					System.out.println("Enter the  duration in number of months");
+					check1=true;
+					
+					 tempUpdate = sc.next();
+						int month = 0;
+						while (check1) {
+							
+							if (tempUpdate.matches("[0-9]{1,20}")) {
+								month= Integer.parseInt(tempUpdate);
+								if(month>0) {
+								
+									check1 = false;}
+								else {
+									System.out.println("Please re-enter the value");
+									tempUpdate=sc.next();
+								}
+								
+							} else {
+								System.out.println("Please Re-enter the value");
+								tempUpdate = sc.next();
+							}
+
+						}
+						mutualFund.setDuration(month);
+
+					
+					
+					
+				}
+				else if(stat==2) {
+					mutualFund.setFrequency(Frequency.QUATERLY);
+					System.out.println("Enter the duration in number of quarters");
+					check1=true;
+					
+					 tempUpdate = sc.next();
+						int quarter = 0;
+						while (check1) {
+							if (tempUpdate.matches("[1-9]{1,20}")) {
+								quarter= Integer.parseInt(tempUpdate);
+								
+									check1 = false;
+								
+							} else {
+								System.out.println("Please Re-enter the value");
+								tempUpdate = sc.next();
+							}
+
+						}
+						mutualFund.setDuration(quarter);
+
+					
+				}
+				else if(stat==3) {
+					mutualFund.setFrequency(Frequency.HALFYEARLY);
+					System.out.println("Enter the number of half-years");
+					check1=true;
+					
+					 tempUpdate = sc.next();
+						int half_years = 0;
+						while (check1) {
+							if (tempUpdate.matches("[1-9]{1,20}")) {
+								half_years= Integer.parseInt(tempUpdate);
+								
+									check1 = false;
+								
+							} else {
+								System.out.println("Please Re-enter the value");
+								tempUpdate = sc.next();
+							}
+
+						}
+						mutualFund.setDuration(half_years);
+
+				}
+				else if(stat==4) {
+					mutualFund.setFrequency(Frequency.ANNUALLY);
+					System.out.println("Enter the number of years");
+					check1=true;
+					
+					 tempUpdate = sc.next();
+						int years = 0;
+						while (check1) {
+							if (tempUpdate.matches("[1-9]{1,20}")) {
+								years= Integer.parseInt(tempUpdate);
+								
+									check1 = false;
+								
+							} else {
+								System.out.println("Please Re-enter the value");
+								tempUpdate = sc.next();
+							}
+
+						}
+						mutualFund.setDuration(years);
+
+				}
+				else if(stat==5) {
+					mutualFund.setFrequency(Frequency.DAILY);
+					System.out.println("Enter the number of days");
+					check1=true;
+					
+					 tempUpdate = sc.next();
+						int days = 0;
+						while (check1) {
+							if (tempUpdate.matches("[1-9]{1,1000}")) {
+								days= Integer.parseInt(tempUpdate);
+								
+									check1 = false;
+								
+							} else {
+								System.out.println("Please Re-enter the value");
+								tempUpdate = sc.next();
+							}
+
+						}
+						mutualFund.setDuration(days);
+
+				}
+
+				
+				
+				
+
+				System.out.println("Enter the amount to invest");
+				temp = sc.next();
+				check1=true;
+				while (check1) {
+					if (temp.matches("[+]?[0-9]*\\.?[0-9]+")) {
+						mfAmount = Double.parseDouble(temp);
+						if (mfAmount > 0 && mfAmount>service.viewMFPlans().get(mfId).getMinAmtSip()) {
+							check1 = false;
+						} else {
+							System.out.println("Please Re-enter the value");
+							temp = sc.nextLine();
+
+						}
+
+					} else {
+						System.out.println("Please Re-enter the value");
+						temp = sc.next();
+
+					}
+
+				}
+				mutualFund.setMfAmount(mfAmount);
+				System.out.println("Enter the date you want to start the investment in the format DD/MM/YYYY");
+				DateTimeFormatter format= DateTimeFormatter.ofPattern("d/MM/yyyy");
+
+				String date= null;
+				check1=true;
+				boolean check2= true;
+			    while(check1) {
+			    	 date= sc.next();
+			    	 while(check2) {
+			    		
+			    		 if(date.matches("^(3[01]|[12][0-9]|0[1-9])/(1[0-2]|0[1-9])/[0-9]{4}$")) {
+			    			check2=false; 
+			    		 }
+			    		 else {
+			    		 System.out.println("Enter the date again");
+			    		 date=sc.next();}
+			    	 }
+			      
+			    	 
+			    	 
+			    	 
+					String arr[]=date.split("[/]");
+					int days= Integer.parseInt(arr[0]);
+					int month= Integer.parseInt(arr[1]);
+					int year=Integer.parseInt(arr[2]);
+					System.out.println(days);
+					System.out.println(month);
+					System.out.println(year);
+			     
+				if(isValidDate(days, month, year)) {
+					check1=false;					
+					
+				}
+				else {
+				System.out.println("Please enter valid date");
+				date= sc.next();}
+				
+			    }
+				LocalDate buydate=LocalDate.parse(date, format);
+				mutualFund.setBuyDate(buydate);
+				 
+				service.investSipMF(userId, mutualFund);
+				
+				
+	
+				System.out.println("transaction completed");}
+				else if(a=="DIRECT") {
+					viewMFPlans(a);
+					MutualFund mutualFund= new MutualFund();
+					BankMutualFund bankMutualFund= new BankMutualFund();
+					int mfId = 0;
+					boolean check = true;
+					boolean check1 = true;
+					double mfAmount = 0;
+					System.out.println("Enter the mutual fund Id:");
+					String temp = sc.next();
+					while (check) {
+
+						if (temp.matches("[1-9][0-9]{2,10}")) {
+
+							mfId = Integer.parseInt(temp);
+							if (service.viewMFPlans().containsKey(mfId)) {
+
+								check = false;
+							} else {
+								System.out.println("Please enter valid MfId");
+								temp = sc.next();
+
+							}
+
+						}
+
+						else {
+							System.out.println("Please Re-enter the value");
+							temp = sc.next();
+
+						}
+
+					}
+					
+					System.out.println("Enter the amount to invest");
+					temp = sc.next();
+					check1=true;
+					while (check1) {
+						if (temp.matches("[+]?[0-9]*\\.?[0-9]+")) {
+							mfAmount = Double.parseDouble(temp);
+							if (mfAmount > 0 && mfAmount>service.viewMFPlans().get(mfId).getMinAmtSip()) {
+								check1 = false;
+							} else {
+								System.out.println("Please Re-enter the value");
+								temp = sc.nextLine();
+
+							}
+
+						} else {
+							System.out.println("Please Re-enter the value");
+							temp = sc.next();
+
+						}
+
+					}
+					//function of service
+					service.investDirMF(mfAmount, userId, mfId);
+
+
+					
+				}
+			
+				log.info("User invests in mutual fund");
+			} catch (IBSException e) {
+				log.error(e);
+				System.out.println(e.getMessage());
+
+			}
+		}
